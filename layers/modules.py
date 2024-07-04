@@ -11,6 +11,7 @@ class RegularBlock(nn.Module):
 
     def __init__(self, config, in_features, out_features):
         super().__init__()
+        self.out_features = out_features
         self.mlp1 = MlpBlock(in_features, out_features, config.architecture.depth_of_mlp)
         self.mlp2 = MlpBlock(in_features, out_features, config.architecture.depth_of_mlp)
         self.skip = SkipConnection(in_features + out_features, out_features)
@@ -19,6 +20,7 @@ class RegularBlock(nn.Module):
         mlp1 = self.mlp1(inputs)
         mlp2 = self.mlp2(inputs)
         mult = torch.matmul(mlp1, mlp2)
+        mult = torch.sqrt(torch.relu(mult)) - torch.sqrt(torch.relu(-mult))
         out = self.skip(in1=inputs, in2=mult)
         return out
 
