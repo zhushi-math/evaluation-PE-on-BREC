@@ -66,6 +66,8 @@ elif args.PE_METHOD == 'rrwp':
     PE_LEN = args.PE_LEN
 elif args.PE_METHOD == 'adj_powers':
     PE_LEN = args.PE_LEN
+else:
+    PE_LEN = args.PE_LEN
 
 
 P_NORM = 2 if args.P_NORM == "2" else torch.inf

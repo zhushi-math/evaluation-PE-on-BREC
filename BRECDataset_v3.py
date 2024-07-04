@@ -5,6 +5,8 @@ import torch_geometric
 from torch_geometric.data import InMemoryDataset
 from torch_geometric.utils.convert import from_networkx
 import os
+from scipy.special import comb
+
 
 torch_geometric.seed_everything(2022)
 
@@ -28,6 +30,35 @@ def rrwp(adj, pe_len):
         pe_list.append(out)
 
     pe = np.stack(pe_list, axis=0)  # k x n x n
+    return pe
+
+
+def bern_poly(adj, pe_len):
+    deg = adj.sum(dim=0)
+    deg_inv_sqrt = deg.pow(-0.5)
+    deg_inv_sqrt.masked_fill_(deg_inv_sqrt == float("inf"), 0)
+
+    adj = torch.from_numpy(adj).float()
+    norm_adj = deg_inv_sqrt.view((-1, 1)) * adj * deg_inv_sqrt.view((1, -1))
+
+    eye = torch.eye(adj.size(0))
+    adj1 = eye + norm_adj
+    adj2 = eye - norm_adj
+
+    K = pe_len - 2
+
+    base1_list = [eye, adj1 / 2.] + [None] * (K - 1)
+    base2_list = [eye, adj2 / 2.] + [None] * (K - 1)
+    for k in range(2, K + 1):
+        lidx, ridx = k // 2, k - k // 2
+        base1_list[k] = base1_list[lidx] @ base1_list[ridx]
+        base2_list[k] = base2_list[lidx] @ base2_list[ridx]
+
+    bp_base_list = [base1_list[K - k] @ base2_list[k] for k in range(K + 1)]
+    bp_coef_list = [comb(K, k) for k in range(K + 1)]
+    basis = [bp_base_list[k] * bp_coef_list[k] for k in range(K + 1)]
+    basis = [eye] + basis
+    pe = torch.stack(basis, dim=-1)  # n x n x (K+2)
     return pe
 
 
@@ -74,6 +105,8 @@ class BRECDataset(InMemoryDataset):
             g_networkx = nx.from_graph6_bytes(g)
             adj: np.ndarray = nx.to_numpy_array(g_networkx)
             if self.poly_method == 'rrwp':
+                pe = rrwp(adj, self.pe_len)
+            elif self.poly_method == 'bern_poly':
                 pe = rrwp(adj, self.pe_len)
 
             data.append(torch.from_numpy(pe).float())
