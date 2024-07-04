@@ -29,16 +29,33 @@ def rrwp(adj, pe_len):
         out = out @ adj
         pe_list.append(out)
 
-    pe = np.stack(pe_list, axis=0)  # k x n x n
+    pe = torch.stack(pe_list, dim=0)  # k x n x n
+    return pe
+
+
+def adj_powers(adj, pe_len):
+    adj = torch.from_numpy(adj).float()
+    deg = adj.sum(dim=0)
+    deg_inv_sqrt = deg.pow(-0.5)
+    deg_inv_sqrt.masked_fill_(deg_inv_sqrt == float("inf"), 0)
+    norm_adj = deg_inv_sqrt.view((-1, 1)) * adj * deg_inv_sqrt.view((1, -1))
+
+    pe_list = [torch.eye(adj.size(0))]
+    out = norm_adj
+    pe_list.append(out)
+    while len(pe_list) < pe_len:
+        out = out @ norm_adj
+        pe_list.append(out)
+
+    pe = torch.stack(pe_list, dim=0)  # k x n x n
     return pe
 
 
 def bern_poly(adj, pe_len):
+    adj = torch.from_numpy(adj).float()
     deg = adj.sum(dim=0)
     deg_inv_sqrt = deg.pow(-0.5)
     deg_inv_sqrt.masked_fill_(deg_inv_sqrt == float("inf"), 0)
-
-    adj = torch.from_numpy(adj).float()
     norm_adj = deg_inv_sqrt.view((-1, 1)) * adj * deg_inv_sqrt.view((1, -1))
 
     eye = torch.eye(adj.size(0))
@@ -108,8 +125,10 @@ class BRECDataset(InMemoryDataset):
                 pe = rrwp(adj, self.pe_len)
             elif self.poly_method == 'bern_poly':
                 pe = rrwp(adj, self.pe_len)
+            elif self.poly_method == 'adj_powers':
+                pe = adj_powers(adj, self.pe_len)
 
-            data.append(torch.from_numpy(pe).float())
+            data.append(pe)
 
         self._data = data
 
