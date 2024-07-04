@@ -22,7 +22,6 @@ def rrwp(adj, pe_len):
     deg_inv[deg_inv == float("inf")] = 0
     adj = deg_inv.reshape((-1, 1)) * adj
     pe_list = [torch.eye(adj.size(0))]
-
     out = adj
     pe_list.append(out)
     while len(pe_list) < pe_len:
@@ -39,7 +38,6 @@ def adj_powers(adj, pe_len):
     deg_inv_sqrt = deg.pow(-0.5)
     deg_inv_sqrt.masked_fill_(deg_inv_sqrt == float("inf"), 0)
     norm_adj = deg_inv_sqrt.view((-1, 1)) * adj * deg_inv_sqrt.view((1, -1))
-
     pe_list = [torch.eye(adj.size(0))]
     out = norm_adj
     pe_list.append(out)
@@ -57,11 +55,9 @@ def bern_poly(adj, pe_len):
     deg_inv_sqrt = deg.pow(-0.5)
     deg_inv_sqrt.masked_fill_(deg_inv_sqrt == float("inf"), 0)
     norm_adj = deg_inv_sqrt.view((-1, 1)) * adj * deg_inv_sqrt.view((1, -1))
-
     eye = torch.eye(adj.size(0))
     adj1 = eye + norm_adj
     adj2 = eye - norm_adj
-
     K = pe_len - 2
 
     base1_list = [eye, adj1 / 2.] + [None] * (K - 1)
@@ -75,7 +71,76 @@ def bern_poly(adj, pe_len):
     bp_coef_list = [comb(K, k) for k in range(K + 1)]
     basis = [bp_base_list[k] * bp_coef_list[k] for k in range(K + 1)]
     basis = [eye] + basis
-    pe = torch.stack(basis, dim=-1)  # n x n x (K+2)
+    pe = torch.stack(basis, dim=0)  # K x n x n
+    return pe
+
+
+def mixed_bern_poly(adj, pe_len):
+    K = pe_len - 2
+    adj = torch.from_numpy(adj).float()
+    deg = adj.sum(dim=0)
+    deg_inv_sqrt = deg.pow(-0.5)
+    deg_inv_sqrt.masked_fill_(deg_inv_sqrt == float("inf"), 0)
+    norm_adj = deg_inv_sqrt.view((-1, 1)) * adj * deg_inv_sqrt.view((1, -1))
+    eye = torch.eye(adj.size(0))
+    adj1 = eye + norm_adj
+    adj2 = eye - norm_adj
+
+    base_list = [adj1 @ adj1, adj1 @ adj2, adj2 @ adj2]
+    base_dict = {2: base_list}
+    for k in range(4, K + 1, 2):
+        a_idx = ((k // 2) + 1) // 2 * 2
+        b_idx = k - a_idx
+        base_list = [
+            base_dict[a_idx][1] @ base_dict[b_idx][0],
+            base_dict[a_idx][1] @ base_dict[b_idx][1],
+            base_dict[a_idx][1] @ base_dict[b_idx][2],
+        ]
+        base_dict[k] = base_list
+
+    polys = [adj1 / 2, adj2 / 2]
+    for k in range(2, K + 1, 2):
+        base_list = base_dict[k]
+        base1 = base_dict[k][0] * ((2 ** -k) * comb(k, k // 2 - 1))
+        base2 = base_dict[k][2] * ((2 ** -k) * comb(k, k // 2 + 1))
+        polys += [base1, base2]
+
+    pe = torch.stack(polys, dim=0)  # k x n x n
+    return pe
+
+
+def deco_bern_poly(adj, pe_len):
+    K = pe_len - 2
+    adj = torch.from_numpy(adj).float()
+    deg = adj.sum(dim=0)
+    deg_inv_sqrt = deg.pow(-0.5)
+    deg_inv_sqrt.masked_fill_(deg_inv_sqrt == float("inf"), 0)
+    norm_adj = deg_inv_sqrt.view((-1, 1)) * adj * deg_inv_sqrt.view((1, -1))
+    eye = torch.eye(adj.size(0))
+    adj1 = eye + norm_adj
+    adj2 = eye - norm_adj
+
+    base_list = [adj1 @ adj1, adj1 @ adj2, adj2 @ adj2]
+    base_dict = {2: base_list}
+    for k in range(4, K + 1, 2):
+        a_idx = ((k // 2) + 1) // 2 * 2
+        b_idx = k - a_idx
+        base_list = [
+            base_dict[a_idx][1] @ base_dict[b_idx][0],
+            base_dict[a_idx][1] @ base_dict[b_idx][1],
+            base_dict[a_idx][1] @ base_dict[b_idx][2],
+        ]
+        base_dict[k] = base_list
+
+    polys = [adj1 / 2, eye, adj2 / 2]
+    for k in range(2, K + 1, 2):
+        base_list = base_dict[k]
+        base1 = base_dict[k][0] * ((2 ** -k) * comb(k, k // 2 - 1))
+        base2 = base_dict[k][1] * ((2 ** -k) * comb(k, k // 2 + 0))
+        base3 = base_dict[k][2] * ((2 ** -k) * comb(k, k // 2 + 1))
+        polys += [base1, base2, base3]
+
+    pe = torch.stack(polys, dim=0)  # (k*1.5) x n x n
     return pe
 
 
@@ -123,10 +188,14 @@ class BRECDataset(InMemoryDataset):
             adj: np.ndarray = nx.to_numpy_array(g_networkx)
             if self.poly_method == 'rrwp':
                 pe = rrwp(adj, self.pe_len)
-            elif self.poly_method == 'bern_poly':
-                pe = rrwp(adj, self.pe_len)
             elif self.poly_method == 'adj_powers':
                 pe = adj_powers(adj, self.pe_len)
+            elif self.poly_method == 'bern_poly':
+                pe = bern_poly(adj, self.pe_len)
+            elif self.poly_method == 'mixed_bern_poly':
+                pe = mixed_bern_poly(adj, self.pe_len)
+            elif self.poly_method == 'deco_bern_poly':
+                pe = deco_bern_poly(adj, self.pe_len)
 
             data.append(pe)
 
