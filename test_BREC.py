@@ -252,7 +252,7 @@ def evaluation(dataset, model, path, device, config):
     logger.info(f"Fail in reliability: {fail_in_reliability} / {SAMPLE_NUM}")
     logger.info(correct_list)
 
-    logger.add(f"{path}/result_show.sqrt.{args.PE_METHOD}.{args.PE_ORDER}.txt", format="{message}", encoding="utf-8")
+    logger.add(f"{path}/result_show.sqrt.{args.PE_METHOD}.{args.PE_ORDER:02d}.txt", format="{message}", encoding="utf-8")
     logger.info(
         "Real_correct\tCorrect\tFail\tarchitecture\t\tdepth\tsuffix\tOUTPUT_DIM\tBATCH_SIZE\tLEARNING_RATE\tWEIGHT_DECAY\tTHRESHOLD\tMARGIN\tLOSS_THRESHOLD\tEPOCH\tSEED"
     )
@@ -283,7 +283,7 @@ def main():
     OUT_PATH = "result_BREC"
     PATH = os.path.join(OUT_PATH, NAME)
     os.makedirs(PATH, exist_ok=True)
-    LOG_NAME = os.path.join(PATH, f"log.sqrt.{args.PE_METHOD}.{args.PE_ORDER}.txt")
+    LOG_NAME = os.path.join(PATH, f"log.sqrt.{args.PE_METHOD}.{args.PE_ORDER:02d}.txt")
     logger.remove(handler_id=None)
     logger.add(LOG_NAME, rotation="5MB")
 
