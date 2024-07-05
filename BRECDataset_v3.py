@@ -134,7 +134,6 @@ def deco_bern_poly(adj, pe_len):
 
     polys = [adj1 / 2, eye, adj2 / 2]
     for k in range(2, K + 1, 2):
-        base_list = base_dict[k]
         base1 = base_dict[k][0] * ((2 ** -k) * comb(k, k // 2 - 1))
         base2 = base_dict[k][1] * ((2 ** -k) * comb(k, k // 2 + 0))
         base3 = base_dict[k][2] * ((2 ** -k) * comb(k, k // 2 + 1))
