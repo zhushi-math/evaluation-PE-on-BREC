@@ -1,0 +1,222 @@
+result_show.sqrt.adj_powers.06.txt
+avg: 252.1
+std: 1.9209372712298545
+max: 254
+min: 248
+
+result_show.sqrt.adj_powers.08.txt
+avg: 260.9
+std: 1.7
+max: 264
+min: 258
+
+result_show.sqrt.adj_powers.10.txt
+avg: 257.2
+std: 1.469693845669907
+max: 259
+min: 254
+
+result_show.sqrt.adj_powers.12.txt
+avg: 259.0
+std: 2.280350850198276
+max: 262
+min: 255
+
+result_show.sqrt.adj_powers.14.txt
+avg: 255.2
+std: 3.1559467676118995
+max: 259
+min: 247
+
+result_show.sqrt.adj_powers.16.txt
+avg: 256.4
+std: 1.4966629547095764
+max: 259
+min: 254
+
+result_show.sqrt.adj_powers.18.txt
+avg: 252.5
+std: 1.6881943016134133
+max: 255
+min: 250
+
+result_show.sqrt.bern_poly.06.txt
+avg: 253.7
+std: 1.4866068747318506
+max: 257
+min: 252
+
+result_show.sqrt.bern_poly.08.txt
+avg: 254.8
+std: 1.661324772583615
+max: 257
+min: 251
+
+result_show.sqrt.bern_poly.10.txt
+avg: 256.7
+std: 1.1874342087037917
+max: 259
+min: 255
+
+result_show.sqrt.bern_poly.12.txt
+avg: 254.9
+std: 1.6999999999999997
+max: 258
+min: 253
+
+result_show.sqrt.bern_poly.14.txt
+avg: 257.7
+std: 1.5524174696260025
+max: 260
+min: 255
+
+result_show.sqrt.bern_poly.16.txt
+avg: 254.1
+std: 1.7
+max: 257
+min: 252
+
+result_show.sqrt.bern_poly.18.txt
+avg: 247.5
+std: 1.5652475842498528
+max: 251
+min: 245
+
+result_show.sqrt.deco_bern_poly.06.txt
+avg: 254.8
+std: 1.2489995996796797
+max: 256
+min: 252
+
+result_show.sqrt.deco_bern_poly.08.txt
+avg: 264.2
+std: 1.077032961426901
+max: 266
+min: 263
+
+result_show.sqrt.deco_bern_poly.10.txt
+avg: 265.0
+std: 1.3416407864998738
+max: 267
+min: 263
+
+result_show.sqrt.deco_bern_poly.12.txt
+avg: 265.5
+std: 1.02469507659596
+max: 267
+min: 263
+
+result_show.sqrt.deco_bern_poly.14.txt
+avg: 266.1
+std: 0.9433981132056605
+max: 268
+min: 265
+
+result_show.sqrt.deco_bern_poly.16.txt
+avg: 264.2
+std: 0.7483314773547882
+max: 265
+min: 263
+
+result_show.sqrt.deco_bern_poly.18.txt
+avg: 267.1
+std: 1.1357816691600546
+max: 269
+min: 265
+
+result_show.sqrt.deco_bern_poly.20.txt
+avg: 267.4
+std: 0.8
+max: 269
+min: 266
+
+result_show.sqrt.deco_bern_poly.22.txt
+avg: 267.5
+std: 1.284523257866513
+max: 269
+min: 265
+
+result_show.sqrt.mixed_bern_poly.06.txt
+avg: 253.5
+std: 1.5652475842498528
+max: 255
+min: 251
+
+result_show.sqrt.mixed_bern_poly.08.txt
+avg: 263.7
+std: 1.676305461424021
+max: 266
+min: 260
+
+result_show.sqrt.mixed_bern_poly.10.txt
+avg: 261.9
+std: 1.7
+max: 264
+min: 259
+
+result_show.sqrt.mixed_bern_poly.12.txt
+avg: 263.9
+std: 1.374772708486752
+max: 266
+min: 261
+
+result_show.sqrt.mixed_bern_poly.14.txt
+avg: 263.9
+std: 1.8681541692269406
+max: 268
+min: 261
+
+result_show.sqrt.mixed_bern_poly.16.txt
+avg: 265.1
+std: 1.7578395831246945
+max: 268
+min: 263
+
+result_show.sqrt.mixed_bern_poly.18.txt
+avg: 266.8
+std: 1.2489995996796797
+max: 269
+min: 265
+
+result_show.sqrt.rrwp.06.txt
+avg: 251.5
+std: 1.8027756377319946
+max: 254
+min: 247
+
+result_show.sqrt.rrwp.08.txt
+avg: 262.2
+std: 1.32664991614216
+max: 264
+min: 260
+
+result_show.sqrt.rrwp.10.txt
+avg: 257.8
+std: 1.6
+max: 261
+min: 256
+
+result_show.sqrt.rrwp.12.txt
+avg: 259.6
+std: 1.42828568570857
+max: 261
+min: 256
+
+result_show.sqrt.rrwp.14.txt
+avg: 254.7
+std: 1.9519221295943134
+max: 258
+min: 252
+
+result_show.sqrt.rrwp.16.txt
+avg: 255.8
+std: 2.2715633383201093
+max: 260
+min: 252
+
+result_show.sqrt.rrwp.18.txt
+avg: 251.8
+std: 2.181742422927143
+max: 257
+min: 249
+

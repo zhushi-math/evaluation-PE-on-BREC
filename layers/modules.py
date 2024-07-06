@@ -40,9 +40,10 @@ class MlpBlock(nn.Module):
             in_features = out_features
 
     def forward(self, inputs):
-        out = inputs
-        for conv_layer in self.convs:
-            out = self.activation(conv_layer(out))
+        out = self.convs[0](inputs)
+        for idx in range(1, len(self.convs)):
+            out = self.activation(out)
+            out = self.convs[idx](out)
 
         return out
 

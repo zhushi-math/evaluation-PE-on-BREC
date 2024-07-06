@@ -57,19 +57,23 @@ parser.add_argument(
     help="The dataset name (overrides config file value)",
 )
 parser.add_argument("--PE_METHOD", type=str, default="rrwp")
-parser.add_argument("--PE_ORDER", type=int, default=10)
+parser.add_argument("--PE_POWER", type=int, default=10)
 args = parser.parse_args()
 
-if args.PE_METHOD == 'node+edge':
-    PE_LEN = 1
-elif args.PE_METHOD == 'rrwp':
-    PE_LEN = args.PE_ORDER
+if args.PE_METHOD == 'rrwp':
+    PE_LEN = args.PE_POWER + 1
 elif args.PE_METHOD == 'adj_powers':
-    PE_LEN = args.PE_ORDER
-elif args.PE_METHOD == 'deco_bern_poly':
-    PE_LEN = args.PE_ORDER // 2 * 3
+    PE_LEN = args.PE_POWER + 1
+elif args.PE_METHOD == 'bernstein':
+    PE_LEN = args.PE_POWER + 2
+elif args.PE_METHOD == 'bern_mixed_sym2':
+    PE_LEN = args.PE_POWER * 2 + 1
+elif args.PE_METHOD == 'bern_mixed_sym3':
+    PE_LEN = args.PE_POWER // 2 * 5 + 1
+elif args.PE_METHOD == 'bern_mixed_smooth':
+    PE_LEN = args.PE_POWER + 1
 else:
-    PE_LEN = args.PE_ORDER
+    raise NotImplementedError()
 
 
 P_NORM = 2 if args.P_NORM == "2" else torch.inf
@@ -185,8 +189,8 @@ def evaluation(dataset, model, path, device, config):
                 model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY
             )
             scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer)
-            dataset_traintest = BRECDataset(args.PE_METHOD, args.PE_ORDER, range(id * NUM_RELABEL * 2, (id + 1) * NUM_RELABEL * 2))
-            dataset_reliability = BRECDataset(args.PE_METHOD, args.PE_ORDER, range((id + SAMPLE_NUM) * NUM_RELABEL * 2, (id + SAMPLE_NUM + 1) * NUM_RELABEL * 2))
+            dataset_traintest = BRECDataset(args.PE_METHOD, args.PE_POWER, range(id * NUM_RELABEL * 2, (id + 1) * NUM_RELABEL * 2))
+            dataset_reliability = BRECDataset(args.PE_METHOD, args.PE_POWER, range((id + SAMPLE_NUM) * NUM_RELABEL * 2, (id + SAMPLE_NUM + 1) * NUM_RELABEL * 2))
             # model.reset_parameters()
             model.train()
             for _ in range(EPOCH):
@@ -252,7 +256,7 @@ def evaluation(dataset, model, path, device, config):
     logger.info(f"Fail in reliability: {fail_in_reliability} / {SAMPLE_NUM}")
     logger.info(correct_list)
 
-    logger.add(f"{path}/result_show.sqrt.{args.PE_METHOD}.{args.PE_ORDER:02d}.txt", format="{message}", encoding="utf-8")
+    logger.add(f"{path}/result_show.sqrt.{args.PE_METHOD}.{args.PE_POWER:02d}.txt", format="{message}", encoding="utf-8")
     logger.info(
         "Real_correct\tCorrect\tFail\tarchitecture\t\tdepth\tsuffix\tOUTPUT_DIM\tBATCH_SIZE\tLEARNING_RATE\tWEIGHT_DECAY\tTHRESHOLD\tMARGIN\tLOSS_THRESHOLD\tEPOCH\tSEED"
     )
@@ -283,7 +287,7 @@ def main():
     OUT_PATH = "result_BREC"
     PATH = os.path.join(OUT_PATH, NAME)
     os.makedirs(PATH, exist_ok=True)
-    LOG_NAME = os.path.join(PATH, f"log.sqrt.{args.PE_METHOD}.{args.PE_ORDER:02d}.txt")
+    LOG_NAME = os.path.join(PATH, f"log.sqrt.{args.PE_METHOD}.{args.PE_POWER:02d}.txt")
     logger.remove(handler_id=None)
     logger.add(LOG_NAME, rotation="5MB")
 

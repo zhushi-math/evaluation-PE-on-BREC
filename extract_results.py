@@ -2,7 +2,7 @@ import os
 import numpy as np
 
 
-folder = "result_BREC"
+folder = "result_BREC/result_BREC_2"
 
 with open('summary.txt', 'w') as wfile:
 
