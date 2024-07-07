@@ -61,11 +61,13 @@ class BaseModel(nn.Module):
             x = self.bn_layers[i](x)
             if self.config.architecture.new_suffix:
                 # use new suffix
-                scores = self.fc_layers[i](layers.diag_offdiag_maxpool(x)) + scores
+                scores = self.fc_layers[i](layers.diag_offdiag_meanpool(x)) + scores
+                # scores = self.fc_layers[i](layers.diag_offdiag_maxpool(x)) + scores
 
         if not self.config.architecture.new_suffix:
             # old suffix
-            x = layers.diag_offdiag_maxpool(x)  # NxFxMxM -> Nx2F
+            x = layers.diag_offdiag_meanpool(x)  # NxFxMxM -> Nx2F
+            # x = layers.diag_offdiag_maxpool(x)  # NxFxMxM -> Nx2F
             for fc in self.fc_layers:
                 x = fc(x)
             scores = x

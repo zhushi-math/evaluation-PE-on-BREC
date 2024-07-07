@@ -284,7 +284,7 @@ def main():
         + f"{str(config.architecture['depth_of_mlp'])}_"
         + f"{str(config.architecture['new_suffix'])}"
     )
-    OUT_PATH = "result_BREC"
+    OUT_PATH = "result_BREC/meanpool"
     PATH = os.path.join(OUT_PATH, NAME)
     os.makedirs(PATH, exist_ok=True)
     LOG_NAME = os.path.join(PATH, f"log.sqrt.{args.PE_METHOD}.{args.PE_POWER:02d}.txt")
