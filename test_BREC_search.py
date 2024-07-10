@@ -2,15 +2,19 @@ import os
 
 SEED = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
 PE_METHODS = [
-    "adj_powers",
-    "rrwp",
-    "bernstein",
-    "bern_mixed_sym2",
-    "bern_mixed_sym3",
-    "bern_mixed_smooth",
+    # "adj_powers",
+    # "rrwp",
+    # "bernstein",
+    # "bern_mixed_sym2",
+    # "bern_mixed_sym3",
+    # "bern_mixed_smooth",
+    "SPD",
+    "resistance_distance",
+    "bernstein+SPD",
+    "bernstein+resistance_distance",
 ]
 
-PE_POWERs = list(range(8, 28, 2))
+PE_POWERs = list(range(4, 28, 2))
 
 for pe_method in PE_METHODS:
     for pe_power in PE_POWERs:

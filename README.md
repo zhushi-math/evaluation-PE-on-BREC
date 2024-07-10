@@ -6,7 +6,13 @@ Please refer to [PPGN](https://github.com/hadarser/ProvablyPowerfulGraphNetworks
 
 ## Usages
 
-To reproduce best result on PPGN, run:
+unzip dataset
+
+```bash
+unzip brec_v3.zip
+```
+
+To reproduce results on PPGN, run:
 
 ```bash
 python test_BREC_search.py

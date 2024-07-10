@@ -72,6 +72,9 @@ elif args.PE_METHOD == 'bern_mixed_sym3':
     PE_LEN = args.PE_POWER // 2 * 5 + 1
 elif args.PE_METHOD == 'bern_mixed_smooth':
     PE_LEN = args.PE_POWER + 1
+elif args.PE_METHOD == 'SPD':
+    raise NotImplementedError()
+    PE_LEN = 0
 else:
     raise NotImplementedError()
 
