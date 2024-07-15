@@ -73,8 +73,13 @@ elif args.PE_METHOD == 'bern_mixed_sym3':
 elif args.PE_METHOD == 'bern_mixed_smooth':
     PE_LEN = args.PE_POWER + 1
 elif args.PE_METHOD == 'SPD':
-    raise NotImplementedError()
-    PE_LEN = 0
+    PE_LEN = 1
+elif args.PE_METHOD == 'resistance_distance':
+    PE_LEN = 1
+elif args.PE_METHOD == 'bern_SPD':
+    PE_LEN = args.PE_POWER + 3
+elif args.PE_METHOD == 'bern_resistance_distance':
+    PE_LEN = args.PE_POWER + 3
 else:
     raise NotImplementedError()
 

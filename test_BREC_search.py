@@ -8,10 +8,10 @@ PE_METHODS = [
     # "bern_mixed_sym2",
     # "bern_mixed_sym3",
     # "bern_mixed_smooth",
-    "SPD",
-    "resistance_distance",
-    "bernstein+SPD",
-    "bernstein+resistance_distance",
+    #"SPD",
+    #"resistance_distance",
+    "bern_SPD",
+    "bern_resistance_distance",
 ]
 
 PE_POWERs = list(range(4, 28, 2))
